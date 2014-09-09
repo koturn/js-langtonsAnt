@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Langton's Ant</title>
+  <link rel="stylesheet" href="css/index.css" type="text/css" media="screen"/>
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<header>
+  <h1>Langton's Ant</h1>
+</header>
+
+<canvas id="la-canvas" width="300" height="300"></canvas>
+
+<div id="control">
+  <span class="button" onClick="controller.init()">Init</span>
+  <span class="button" onClick="controller.start()">Start</span>
+  <span class="button" onClick="controller.stop()">Stop</span>
+</div>
+<div id="generation">Generation: 0</div>
+
+<script src="js/langtonsAnt.js"></script>
+<script>
+'use strict';
+
+function LangtonsAntController(langtonsAnt, fps) {
+  this.langtonsAnt = langtonsAnt;
+  this.updatetime = 1000 / fps;
+  this.timerId = null;
+}
+
+(function() {
+  var generationDiv = document.getElementById('generation');
+  var generationCnt = 0;
+
+  LangtonsAntController.prototype.init = function() {
+    langtonsAnt._ants = generateAnts(20, 150, 150, 4);
+    langtonsAnt.init();
+    generationCnt = 0;
+    generationDiv.innerHTML = 'Generation: ' + generationCnt;
+  };
+
+  LangtonsAntController.prototype.start = function() {
+    if (this.timeId != null) return;
+    this.langtonsAnt.update();
+    var __this = this;
+    this.timerId = setInterval(function() {
+      __this.langtonsAnt.update();
+      generationCnt++;
+      generationDiv.innerHTML = 'Generation: ' + generationCnt;
+    }, this.updatetime);
+  }
+
+  LangtonsAntController.prototype.stop = function() {
+    if (this.timerId == null) return;
+    clearInterval(this.timerId);
+    this.timerId = null;
+  }
+})();
+
+function generateAnts(n, xMax, yMax, dMax) {
+  var ants = [];
+  for (var i = 0, n = randomInt(3, 24); i < n; i++) {
+    ants[i] = {
+      x: randomInt(0, xMax),
+      y: randomInt(0, yMax),
+      dir: randomInt(0, dMax),
+      color: randomColor()
+    };
+  }
+  return ants;
+}
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function randomColor() {
+  return 'rgb(' + randomInt(32, 255) + ', ' + randomInt(32, 255) + ', ' + randomInt(32, 255) + ')';
+}
+
+var ants = generateAnts(20, 150, 150, 4);
+var langtonsAnt = new LangtonsAnt('la-canvas', 2, ants, 'rgba(255, 255, 255, 0');
+var controller = new LangtonsAntController(langtonsAnt, 240);
+</script>
+
+<a href="https://github.com/koturn/js-langtonsAnt">
+  <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png">
+</a>
+</body>
+</html>
