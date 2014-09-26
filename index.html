@@ -47,7 +47,7 @@ function LangtonsAntController(langtonsAnt, fps) {
   };
 
   LangtonsAntController.prototype.start = function() {
-    if (this.timeId != null) return;
+    if (this.timerId != null) return;
     this.langtonsAnt.update();
     var __this = this;
     this.timerId = setInterval(function() {
