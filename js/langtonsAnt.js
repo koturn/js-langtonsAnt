@@ -1,20 +1,18 @@
-'use strict';
+;(function(global) {
+  'use strict';
 
+  function LangtonsAnt(canvasId, cellSize, ants, backgroundColor) {
+    this._canvas = global.document.getElementById(canvasId);
+    this._ctx = this._canvas.getContext('2d');
+    this._nCol = Math.floor(this._canvas.width / cellSize);
+    this._nRow = Math.floor(this._canvas.height / cellSize);
+    this._cellSize = cellSize;
+    this._board = new Array(this._nRow * this._nCol);
+    this._backgroundColor = backgroundColor;
+    this._ants = ants;
+    this.init();
+  };
 
-function LangtonsAnt(canvasId, cellSize, ants, backgroundColor) {
-  this._canvas = document.getElementById(canvasId);
-  this._ctx = this._canvas.getContext('2d');
-  this._nCol = Math.floor(this._canvas.width / cellSize);
-  this._nRow = Math.floor(this._canvas.height / cellSize);
-  this._cellSize = cellSize;
-  this._board = new Array(this._nRow * this._nCol);
-  this._backgroundColor = backgroundColor;
-  this._ants = ants;
-  this.init();
-};
-
-
-(function() {
   var direction = {
     UP: 0,
     RIGHT: 1,
@@ -41,9 +39,9 @@ function LangtonsAnt(canvasId, cellSize, ants, backgroundColor) {
     var __this = this;
     this._ants.forEach(function(ant) {
       var posIdx = ant.y * __this._nCol + ant.x;
-      if (__this._board[posIdx] == 0) {
+      if (__this._board[posIdx] === 0) {
         ant.dir = (ant.dir + 1) % N_DIRECTION;
-        __this._board[posIdx] = ants.id;
+        __this._board[posIdx] = ant.id;
         __this._ctx.fillStyle = ant.color;
         __this._ctx.fillRect(ant.x * __this._cellSize, ant.y * __this._cellSize, __this._cellSize, __this._cellSize);
       } else {
@@ -67,4 +65,6 @@ function LangtonsAnt(canvasId, cellSize, ants, backgroundColor) {
       }
     });
   };
-})();
+
+  global.LangtonsAnt = LangtonsAnt;
+})((this || 0).self || global);

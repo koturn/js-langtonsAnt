@@ -27,17 +27,19 @@
 
 <script src="js/langtonsAnt.js"></script>
 <script>
-'use strict';
+(function(global) {
+  'use strict';
 
-function LangtonsAntController(langtonsAnt, fps) {
-  this.langtonsAnt = langtonsAnt;
-  this.updatetime = 1000 / fps;
-  this.timerId = null;
-}
+  function LangtonsAntController(langtonsAnt, fps) {
+    this.langtonsAnt = langtonsAnt;
+    this.updatetime = 1000 / fps;
+    this.timerId = null;
+  }
 
-(function() {
   var generationDiv = document.getElementById('generation');
   var generationCnt = 0;
+  var ants = generateAnts(20, 150, 150, 4);
+  var langtonsAnt = new LangtonsAnt('la-canvas', 2, ants, 'rgba(255, 255, 255, 0');
 
   LangtonsAntController.prototype.init = function() {
     langtonsAnt._ants = generateAnts(20, 150, 150, 4);
@@ -62,32 +64,30 @@ function LangtonsAntController(langtonsAnt, fps) {
     clearInterval(this.timerId);
     this.timerId = null;
   }
-})();
 
-function generateAnts(n, xMax, yMax, dMax) {
-  var ants = [];
-  for (var i = 0, n = randomInt(3, 24); i < n; i++) {
-    ants[i] = {
-      x: randomInt(0, xMax),
-      y: randomInt(0, yMax),
-      dir: randomInt(0, dMax),
-      color: randomColor()
-    };
+  function generateAnts(n, xMax, yMax, dMax) {
+    var ants = [];
+    for (var i = 0, n = randomInt(3, 24); i < n; i++) {
+      ants[i] = {
+        x: randomInt(0, xMax),
+        y: randomInt(0, yMax),
+        dir: randomInt(0, dMax),
+        color: randomColor()
+      };
+    }
+    return ants;
   }
-  return ants;
-}
 
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
-function randomColor() {
-  return 'rgb(' + randomInt(32, 255) + ', ' + randomInt(32, 255) + ', ' + randomInt(32, 255) + ')';
-}
+  function randomColor() {
+    return 'rgb(' + randomInt(32, 255) + ', ' + randomInt(32, 255) + ', ' + randomInt(32, 255) + ')';
+  }
 
-var ants = generateAnts(20, 150, 150, 4);
-var langtonsAnt = new LangtonsAnt('la-canvas', 2, ants, 'rgba(255, 255, 255, 0');
-var controller = new LangtonsAntController(langtonsAnt, 240);
+  global.controller = new LangtonsAntController(langtonsAnt, 240);
+})((this || 0).self || global);
 </script>
 
 <a href="https://github.com/koturn/js-langtonsAnt">
